@@ -23,7 +23,10 @@
       "lib/**/*.ts",
       "components/**/*.tsx",
       "store/**/*.ts",
-      "hooks/**/*.ts"
+      "hooks/**/*.ts",
+      "tests/**/*.ts",
+      "tests/**/*.tsx",
+      "proxy.ts"
     ]
   }
 }

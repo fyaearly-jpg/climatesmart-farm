@@ -14,6 +14,26 @@
 //                                  build, minifikasi SWC)
 import type { NextConfig } from "next";
 
+const isDev = process.env.NODE_ENV !== "production";
+
+// Bab k — Content Security Policy. 'unsafe-inline' pada script-src dibutuhkan
+// oleh skrip bootstrap inline Next.js; CSP berbasis nonce yang lebih ketat
+// memaksa seluruh halaman dirender dinamis (landing page tidak lagi statis),
+// jadi di sini dipilih kompromi ini dan dicatat sebagai keterbatasan di laporan.
+// 'unsafe-eval' & ws: hanya aktif saat development (React Refresh / HMR).
+const contentSecurityPolicy = [
+  "default-src 'self'",
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob: https://images.pexels.com",
+  "font-src 'self' data:",
+  `connect-src 'self'${isDev ? " ws: wss:" : ""}`,
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+].join("; ");
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   turbopack: {
@@ -35,6 +55,9 @@ const nextConfig: NextConfig = {
         headers: [
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "DENY" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+          { key: "Content-Security-Policy", value: contentSecurityPolicy },
         ],
       },
     ];

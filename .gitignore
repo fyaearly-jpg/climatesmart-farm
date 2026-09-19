@@ -2,3 +2,11 @@ node_modules
 .next
 *.log
 *.tsbuildinfo
+
+# Variabel lingkungan berisi rahasia — JANGAN di-commit (Bab k)
+.env
+.env.*
+!.env.example
+
+# Hasil coverage (dibuat ulang setiap `npm run test:coverage`)
+coverage

@@ -8,7 +8,6 @@
 // yang lambat tidak memblokir panel Sensor atau Rekomendasi.
 
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 import Link from "next/link";
 import { Suspense } from "react";
 import { RecommendationsPanel } from "@/components/panels/RecommendationsPanel";
@@ -17,9 +16,15 @@ import { WeatherPanel } from "@/components/panels/WeatherPanel";
 import { Skeleton } from "@/components/ui/AsyncUI";
 import { getRecommendations } from "@/lib/data/recommendations";
 import { getUserStats } from "@/lib/data/users";
-import type { Role } from "@/lib/schemas";
+import { getSession } from "@/lib/session";
 
 export const metadata: Metadata = { title: "Dashboard" };
+
+const deniedLabel: Record<string, string> = {
+  petani: "Petani",
+  penyuluh: "Penyuluh",
+  admin: "Admin",
+};
 
 function Panel({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -84,9 +89,9 @@ export default async function DashboardPage({
   searchParams: Promise<{ denied?: string }>;
 }) {
   const { denied } = await searchParams;
-  const cookieStore = await cookies();
-  const role = cookieStore.get("csf_role")?.value as Role;
-  const name = cookieStore.get("csf_name")?.value ?? "";
+  const session = await getSession();
+  const role = session?.role;
+  const name = session?.name ?? "";
 
   return (
     <div className="flex flex-col gap-6">
@@ -95,8 +100,8 @@ export default async function DashboardPage({
           role="alert"
           className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200"
         >
-          Halaman itu khusus peran {denied === "penyuluh" ? "Penyuluh" : "Admin"} Anda dialihkan
-          kembali ke Dashboard.
+          Halaman itu khusus peran {deniedLabel[denied] ?? "lain"} — Anda dialihkan kembali ke
+          Dashboard.
         </p>
       )}
 

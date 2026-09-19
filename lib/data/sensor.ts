@@ -1,5 +1,6 @@
 // lib/data/sensor.ts — Server-only, dipakai RSC & Route Handler /api/sensor
 import "server-only";
+import { randomInt } from "node:crypto";
 import { type SensorSample, SensorSampleSchema } from "../schemas";
 
 function wait(ms: number): Promise<void> {
@@ -14,6 +15,6 @@ const SAMPLES: SensorSample[] = [
 
 export async function getSensor(): Promise<SensorSample> {
   await wait(150);
-  const sample = SAMPLES[Math.floor(Math.random() * SAMPLES.length)];
+  const sample = SAMPLES[randomInt(SAMPLES.length)];
   return SensorSampleSchema.parse(sample);
 }

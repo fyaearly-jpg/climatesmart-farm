@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { registerAction } from "@/lib/actions";
 
-export const metadata: Metadata = { title: "Daftar ClimateSmart Farm" };
+export const metadata: Metadata = { title: "Daftar — ClimateSmart Farm" };
 
 export default async function RegisterPage({
   searchParams,
@@ -43,7 +43,8 @@ export default async function RegisterPage({
           </Link>
           <h1 className="mt-4 text-2xl font-bold text-brand-900 dark:text-white">Buat akun baru</h1>
           <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">
-            Gratis, dan hanya butuh waktu kurang dari satu menit.
+            Gratis, dan hanya butuh waktu kurang dari satu menit. Akun baru terdaftar sebagai
+            Petani; akun Penyuluh dan Admin dibuat oleh pengelola platform.
           </p>
 
           {error && (
@@ -105,24 +106,6 @@ export default async function RegisterPage({
                 className="h-11 rounded-xl border border-stone-300 bg-white px-4 text-sm shadow-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-200 dark:border-stone-700 dark:bg-stone-900 dark:text-white"
                 placeholder="Minimal 8 karakter, ada angka"
               />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor="role"
-                className="text-sm font-medium text-stone-700 dark:text-stone-200"
-              >
-                Daftar sebagai
-              </label>
-              <select
-                id="role"
-                name="role"
-                defaultValue="petani"
-                className="h-11 rounded-xl border border-stone-300 bg-white px-4 text-sm shadow-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-200 dark:border-stone-700 dark:bg-stone-900 dark:text-white"
-              >
-                <option value="petani">Petani</option>
-                <option value="penyuluh">Penyuluh</option>
-                <option value="admin">Admin</option>
-              </select>
             </div>
 
             <button

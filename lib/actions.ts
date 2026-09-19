@@ -6,33 +6,19 @@
 // server sebelum menyentuh lib/data/users.ts.
 "use server";
 
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { registerUser, verifyLogin } from "./data/users";
 import { LoginSchema, RegisterSchema } from "./schemas";
-
-async function setSessionCookies(user: { role: string; name: string }) {
-  const cookieStore = await cookies();
-  cookieStore.set("csf_role", user.role, {
-    httpOnly: true,
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 60 * 8,
-  });
-  cookieStore.set("csf_name", user.name, {
-    httpOnly: true,
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 60 * 8,
-  });
-}
+import { endSession, startSession } from "./session";
 
 export async function registerAction(formData: FormData) {
   const raw = {
     name: formData.get("name"),
     email: formData.get("email"),
     password: formData.get("password"),
-    role: formData.get("role"),
+    // Pendaftaran publik SELALU menjadi Petani. Nilai "role" dari form diabaikan
+    // supaya tidak ada yang bisa mendaftar sebagai Admin/Penyuluh lewat request manual.
+    role: "petani",
   };
   const result = RegisterSchema.safeParse(raw);
   if (!result.success) {
@@ -45,7 +31,7 @@ export async function registerAction(formData: FormData) {
     redirect(`/register?error=${encodeURIComponent(created.error)}`);
   }
 
-  await setSessionCookies(created);
+  await startSession(created);
   redirect("/dashboard");
 }
 
@@ -61,13 +47,11 @@ export async function loginAction(formData: FormData) {
     redirect(`/login?error=${encodeURIComponent(user.error)}`);
   }
 
-  await setSessionCookies(user);
+  await startSession(user);
   redirect("/dashboard");
 }
 
 export async function logoutAction() {
-  const cookieStore = await cookies();
-  cookieStore.delete("csf_role");
-  cookieStore.delete("csf_name");
+  await endSession();
   redirect("/login");
 }

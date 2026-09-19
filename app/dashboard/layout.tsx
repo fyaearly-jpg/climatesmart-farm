@@ -6,23 +6,21 @@
 // ini TIDAK re-render saat berpindah antar /dashboard/* (App Router
 // mempertahankan instance-nya), jadi sidebar/topbar tidak "berkedip"
 // setiap kali pindah halaman.
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { SidebarNav } from "@/components/modules/SidebarNav";
 import { ThemeToggle } from "@/components/modules/ThemeToggle";
 import { RoleBadge } from "@/components/ui/Badge";
 import { logoutAction } from "@/lib/actions";
-import type { Role } from "@/lib/schemas";
+import { getSession } from "@/lib/session";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const cookieStore = await cookies();
-  const role = cookieStore.get("csf_role")?.value as Role | undefined;
-  const name = cookieStore.get("csf_name")?.value;
+  const session = await getSession();
 
   // Pagar kedua di level layout (middleware sudah menangani ini juga) —
   // pertahanan berlapis: jika suatu saat middleware dilewati/di-bypass,
   // Server Component ini tetap menolak render konten dashboard.
-  if (!role) redirect("/login");
+  if (!session) redirect("/login");
+  const { role, name } = session;
 
   return (
     <div className="flex min-h-screen bg-gradient-to-b from-brand-50/60 to-white dark:from-stone-950 dark:to-stone-950">

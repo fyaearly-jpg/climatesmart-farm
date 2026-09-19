@@ -4,6 +4,7 @@
 // useValidateRecommendationMutation (Modul 7) dari ValidationTableClient.
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { authorize } from "@/lib/api-auth";
 import { validateRecommendation } from "@/lib/data/recommendations";
 
 const DecisionSchema = z.object({
@@ -11,6 +12,9 @@ const DecisionSchema = z.object({
 });
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const auth = await authorize("penyuluh");
+  if (!auth.ok) return auth.response;
+
   const { id } = await params;
   const body = await request.json();
   const result = DecisionSchema.safeParse(body);

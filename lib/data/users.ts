@@ -1,11 +1,4 @@
-// lib/data/users.ts
-//
-// Server-only in-memory "database" pengguna. Password di-hash memakai
-// node:crypto scrypt (bawaan Node.js, tanpa dependency tambahan) — bukan
-// disimpan plain text. Ini tetap prototipe akademik (in-memory, hilang saat
-// server restart), TAPI pola hashing-nya sudah representasi praktik yang
-// benar, bukan anti-pattern "simpan password apa adanya" yang sering
-// muncul di tugas kuliah. Relevan untuk Bab k (keamanan sisi klien/server).
+
 import "server-only";
 import { randomBytes, randomUUID, scryptSync, timingSafeEqual } from "node:crypto";
 import { type PublicUser, PublicUserSchema, type Role } from "../schemas";

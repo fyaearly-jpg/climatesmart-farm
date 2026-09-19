@@ -1,5 +1,6 @@
 // lib/data/weather.ts — Server-only, dipakai RSC & Route Handler /api/weather
 import "server-only";
+import { randomInt } from "node:crypto";
 import { type WeatherSample, WeatherSampleSchema } from "../schemas";
 
 function wait(ms: number): Promise<void> {
@@ -14,6 +15,6 @@ const SAMPLES: WeatherSample[] = [
 
 export async function getWeather(): Promise<WeatherSample> {
   await wait(150);
-  const sample = SAMPLES[Math.floor(Math.random() * SAMPLES.length)];
+  const sample = SAMPLES[randomInt(SAMPLES.length)];
   return WeatherSampleSchema.parse(sample);
 }

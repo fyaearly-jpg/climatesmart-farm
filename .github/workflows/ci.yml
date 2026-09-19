@@ -2,9 +2,16 @@ name: CI
 
 # Bab m (DevOps/CI-CD): quality gate otomatis pada setiap push/PR ke main —
 # type-check (Strict TypeScript), lint/format (Biome, Rust toolchain, Bab i),
-# dan production build (Next.js) HARUS lulus sebelum kode dianggap layak
+# unit test + coverage (Vitest), production build (Next.js), lalu analisis
+# SonarQube Cloud (Quality Gate) HARUS lulus sebelum kode dianggap layak
 # di-deploy. Deployment sendiri ditangani terpisah oleh integrasi native
 # GitHub Vercel (auto-deploy saat push ke main) — lihat README.md.
+#
+# Hardening (Bab k, rekomendasi SonarQube):
+# - permissions minimal (hanya baca isi repo)
+# - npm ci --ignore-scripts: skrip lifecycle dependency tidak dijalankan saat install
+# - tanpa npx: semua tool dipanggil dari devDependencies terkunci lewat `npm run`
+# - action pihak ketiga dipin ke commit SHA penuh (bukan tag yang bisa digeser)
 
 on:
   push:
@@ -12,12 +19,22 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   quality-gate:
     runs-on: ubuntu-latest
+    env:
+      # Isi di GitHub: Settings > Secrets and variables > Actions > New repository secret.
+      # Selama belum diisi, langkah SonarQube dilewati (bukan gagal).
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     steps:
       - name: Checkout kode
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # SonarQube butuh riwayat git penuh (blame & new-code detection)
+          persist-credentials: false
 
       - name: Setup Node.js 22
         uses: actions/setup-node@v4
@@ -25,14 +42,32 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Install dependencies (tanpa lifecycle scripts)
+        run: npm ci --ignore-scripts
 
       - name: Strict TypeScript type-check (Bab e)
-        run: npx tsc --noEmit
+        run: npm run typecheck
 
       - name: Biome lint & format check (Bab i — Rust toolchain)
-        run: npx @biomejs/biome check .
+        run: npm run lint
+
+      - name: Unit test + coverage (Vitest — Bab m)
+        run: npm run test:coverage
+
+      - name: Simpan laporan coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 14
 
       - name: Production build (Bab g — Next.js App Router)
         run: npm run build
+
+      - name: SonarQube Cloud scan + tunggu Quality Gate (Bab k)
+        if: ${{ env.SONAR_TOKEN != '' }}
+        uses: SonarSource/sonarqube-scan-action@c7ee0f9df90b7aa20e8dcf9695dcfe2e7da5b4f2 # v7.2.1
+        with:
+          args: >
+            -Dsonar.qualitygate.wait=true
+            -Dsonar.qualitygate.timeout=300

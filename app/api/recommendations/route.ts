@@ -7,15 +7,22 @@
 // dipanggil langsung oleh Server Component app/dashboard/page.tsx —
 // satu sumber kebenaran data, dua jalur akses berbeda kebutuhan.
 import { NextResponse } from "next/server";
+import { authorize } from "@/lib/api-auth";
 import { createRecommendation, getRecommendations } from "@/lib/data/recommendations";
 import { PlotRegistrationSchema } from "@/lib/schemas";
 
 export async function GET() {
+  const auth = await authorize();
+  if (!auth.ok) return auth.response;
+
   const data = await getRecommendations();
   return NextResponse.json(data);
 }
 
 export async function POST(request: Request) {
+  const auth = await authorize("petani");
+  if (!auth.ok) return auth.response;
+
   const body = await request.json();
   const result = PlotRegistrationSchema.safeParse(body);
   if (!result.success) {
