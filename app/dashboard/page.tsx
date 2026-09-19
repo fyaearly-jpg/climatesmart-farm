@@ -95,7 +95,7 @@ export default async function DashboardPage({
           role="alert"
           className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200"
         >
-          Halaman itu khusus peran {denied === "penyuluh" ? "Penyuluh" : "Admin"} — Anda dialihkan
+          Halaman itu khusus peran {denied === "penyuluh" ? "Penyuluh" : "Admin"} Anda dialihkan
           kembali ke Dashboard.
         </p>
       )}

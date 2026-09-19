@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { loginAction } from "@/lib/actions";
 
-export const metadata: Metadata = { title: "Masuk — ClimateSmart Farm" };
+export const metadata: Metadata = { title: "Masuk ClimateSmart Farm" };
 
 export default async function LoginPage({
   searchParams,
@@ -113,7 +113,7 @@ export default async function LoginPage({
         <div className="absolute inset-0 bg-gradient-to-t from-brand-950/80 via-brand-900/20 to-transparent" />
         <div className="absolute bottom-10 left-10 right-10 text-white">
           <p className="text-2xl font-bold">Keputusan tani berbasis data</p>
-          <p className="mt-2 text-brand-100">Cuaca, sensor, dan AI — tervalidasi Penyuluh.</p>
+          <p className="mt-2 text-brand-100">Cuaca, sensor, dan AI tervalidasi Penyuluh.</p>
         </div>
       </div>
     </div>

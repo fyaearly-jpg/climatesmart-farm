@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { registerAction } from "@/lib/actions";
 
-export const metadata: Metadata = { title: "Daftar — ClimateSmart Farm" };
+export const metadata: Metadata = { title: "Daftar ClimateSmart Farm" };
 
 export default async function RegisterPage({
   searchParams,

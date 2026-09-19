@@ -1,5 +1,7 @@
 # 🌱 ClimateSmart Farm — Konsol Next.js
 
+Live Production: https://climatesmart-farm.vercel.app
+
 Platform rekomendasi tani berbasis AI, cuaca real-time, sensor IoT, dan
 validasi Penyuluh. Dibangun dengan Next.js 16 App Router (React Server
 Components), Zustand, TanStack Query v5, Zod, dan Tailwind CSS v4.

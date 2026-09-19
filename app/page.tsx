@@ -23,7 +23,7 @@ const features = [
   },
   {
     title: "Validasi oleh Penyuluh",
-    desc: "Setiap rekomendasi AI ditinjau oleh Penyuluh Pertanian resmi sebelum dijalankan di lapangan — bukan sekadar model tanpa pengawasan.",
+    desc: "Setiap rekomendasi AI ditinjau oleh Penyuluh Pertanian resmi sebelum dijalankan di lapangan bukan sekadar model tanpa pengawasan.",
     icon: "✅",
   },
   {
@@ -79,8 +79,8 @@ export default function LandingPage() {
             Tanam lebih tepat waktu, panen lebih optimal.
           </h1>
           <p className="mt-5 max-w-md text-base text-stone-600 dark:text-stone-300">
-            ClimateSmart Farm memadukan data cuaca, sensor IoT, dan rekomendasi AI — divalidasi
-            langsung oleh Penyuluh Pertanian — supaya keputusan di lahan Anda selalu berbasis data.
+            ClimateSmart Farm memadukan data cuaca, sensor IoT, dan rekomendasi AI divalidasi
+            langsung oleh Penyuluh Pertanian supaya keputusan di lahan Anda selalu berbasis data.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link href="/register">
@@ -188,7 +188,7 @@ export default function LandingPage() {
       </section>
 
       <footer className="border-t border-white/40 py-8 text-center text-xs text-stone-500 dark:border-white/10 dark:text-stone-400">
-        © 2026 ClimateSmart Farm — D3 Teknik Informatika SV UNS Kab. Madiun
+        © 2026 ClimateSmart Farm - D3 Teknik Informatika SV UNS Kab. Madiun
       </footer>
     </div>
   );
