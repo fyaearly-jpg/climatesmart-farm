@@ -1,0 +1,38 @@
+name: CI
+
+# Bab m (DevOps/CI-CD): quality gate otomatis pada setiap push/PR ke main —
+# type-check (Strict TypeScript), lint/format (Biome, Rust toolchain, Bab i),
+# dan production build (Next.js) HARUS lulus sebelum kode dianggap layak
+# di-deploy. Deployment sendiri ditangani terpisah oleh integrasi native
+# GitHub Vercel (auto-deploy saat push ke main) — lihat README.md.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout kode
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Strict TypeScript type-check (Bab e)
+        run: npx tsc --noEmit
+
+      - name: Biome lint & format check (Bab i — Rust toolchain)
+        run: npx @biomejs/biome check .
+
+      - name: Production build (Bab g — Next.js App Router)
+        run: npm run build

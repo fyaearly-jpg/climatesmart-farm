@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+/* ClimateSmart Farm brand tokens — Bab b (Tailwind v4 Oxide, zero-runtime).
+   Warna disarikan dari identitas visual Modul 1-7 sebelumnya (hijau lahan,
+   amber panen, biru langit/cuaca) supaya konsisten lintas seluruh riwayat
+   proyek, sekarang didefinisikan lewat @theme agar dipakai sebagai utility
+   class Tailwind asli (bg-brand-600, text-brand-700, dst). */
+@theme {
+  --color-brand-50: #eef7f1;
+  --color-brand-100: #d7ecdf;
+  --color-brand-200: #b0d9c0;
+  --color-brand-300: #7fbf9a;
+  --color-brand-400: #4fa377;
+  --color-brand-500: #2f8a5c;
+  --color-brand-600: #1f6d47;
+  --color-brand-700: #1a5539;
+  --color-brand-800: #15422e;
+  --color-brand-900: #0f3122;
+
+  --color-amber-glow: #d98a34;
+  --color-sky-glow: #3e7ea8;
+  --color-danger-glow: #c14a35;
+
+  --font-sans: "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  color-scheme: light;
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+body {
+  background: #f6f4ec;
+  color: #1f2e22;
+}
+html[data-theme="dark"] body {
+  background: #10221a;
+  color: #eef2ee;
+}
+
+@keyframes shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+.skeleton-line {
+  height: 14px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #e3ded0 25%, #f3f1e8 37%, #e3ded0 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+html[data-theme="dark"] .skeleton-line {
+  background: linear-gradient(90deg, #1e3a2c 25%, #275038 37%, #1e3a2c 63%);
+  background-size: 400% 100%;
+}
