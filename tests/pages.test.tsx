@@ -36,6 +36,7 @@ describe("halaman publik", () => {
     expect(html).toContain("Validasi oleh Penyuluh");
     expect(html).toContain('href="/login"');
     expect(html).toContain('href="/register"');
+    expect(html).toContain("<main");
   });
 
   it("halaman login tanpa error tidak menampilkan alert", async () => {
@@ -43,6 +44,8 @@ describe("halaman publik", () => {
     const html = await renderToHtml(await Login({ searchParams: Promise.resolve({}) }));
     expect(html).toContain("Selamat datang kembali");
     expect(html).not.toContain('role="alert"');
+    expect(html).toContain("<main");
+    expect(html).toMatch(/autocomplete="current-password"/i);
   });
 
   it("halaman login menampilkan pesan error dari query string", async () => {
@@ -70,6 +73,8 @@ describe("halaman publik", () => {
     expect(html).not.toContain('value="admin"');
     expect(html).not.toContain('value="penyuluh"');
     expect(html).not.toContain('name="role"');
+    expect(html).toContain("<main");
+    expect(html).toMatch(/autocomplete="new-password"/i);
   });
 
   it("halaman register menampilkan pesan error", async () => {

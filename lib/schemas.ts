@@ -8,6 +8,15 @@
 
 import { z } from "zod";
 
+// Bab k (CSP): kebijakan keamanan situs TIDAK mengizinkan 'unsafe-eval'. Saat memvalidasi objek,
+// Zod 4 mencoba `new Function()` untuk kompilasi JIT; browser melaporkan percobaan itu sebagai
+// pelanggaran CSP (error di Console, audit "Issues" Lighthouse) walau kegagalannya ditangani.
+// Mode `jitless` melewati percobaan tersebut. Hanya diaktifkan di browser; di server (Node)
+// tidak ada CSP sehingga JIT yang lebih cepat tetap dipakai.
+if (typeof window !== "undefined") {
+  z.config({ jitless: true });
+}
+
 type Brand<T, B extends string> = T & { readonly __brand: B };
 export type RecommendationId = Brand<string, "RecommendationId">;
 

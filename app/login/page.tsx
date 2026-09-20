@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { loginAction } from "@/lib/actions";
 
-export const metadata: Metadata = { title: "Masuk ClimateSmart Farm" };
+export const metadata: Metadata = { title: "Masuk — ClimateSmart Farm" };
 
 export default async function LoginPage({
   searchParams,
@@ -15,7 +15,7 @@ export default async function LoginPage({
 
   return (
     <div className="grid min-h-screen md:grid-cols-2">
-      <div className="flex items-center justify-center bg-gradient-to-b from-brand-50 to-white px-6 py-12 dark:from-stone-950 dark:to-stone-950">
+      <main className="flex items-center justify-center bg-gradient-to-b from-brand-50 to-white px-6 py-12 dark:from-stone-950 dark:to-stone-950">
         <div className="w-full max-w-sm">
           <Link
             href="/"
@@ -50,6 +50,7 @@ export default async function LoginPage({
               </label>
               <input
                 id="email"
+                autoComplete="email"
                 name="email"
                 type="email"
                 required
@@ -66,6 +67,7 @@ export default async function LoginPage({
               </label>
               <input
                 id="password"
+                autoComplete="current-password"
                 name="password"
                 type="password"
                 required
@@ -99,7 +101,7 @@ export default async function LoginPage({
             </Link>
           </p>
         </div>
-      </div>
+      </main>
 
       <div className="relative hidden md:block">
         <Image
@@ -113,7 +115,7 @@ export default async function LoginPage({
         <div className="absolute inset-0 bg-gradient-to-t from-brand-950/80 via-brand-900/20 to-transparent" />
         <div className="absolute bottom-10 left-10 right-10 text-white">
           <p className="text-2xl font-bold">Keputusan tani berbasis data</p>
-          <p className="mt-2 text-brand-100">Cuaca, sensor, dan AI tervalidasi Penyuluh.</p>
+          <p className="mt-2 text-brand-100">Cuaca, sensor, dan AI — tervalidasi Penyuluh.</p>
         </div>
       </div>
     </div>

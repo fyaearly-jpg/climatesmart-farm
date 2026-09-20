@@ -61,6 +61,7 @@ export function FormEntryClient() {
         </label>
         <input
           id="plotName"
+          autoComplete="off"
           className={inputClass}
           value={form.plotName}
           aria-invalid={Boolean(errors.plotName)}
@@ -81,6 +82,7 @@ export function FormEntryClient() {
         </label>
         <input
           id="commodity"
+          autoComplete="off"
           className={inputClass}
           value={form.commodity}
           aria-invalid={Boolean(errors.commodity)}
@@ -101,6 +103,7 @@ export function FormEntryClient() {
         </label>
         <input
           id="areaHectare"
+          autoComplete="off"
           type="number"
           step="0.1"
           className={inputClass}
@@ -142,6 +145,7 @@ export function FormEntryClient() {
         </label>
         <input
           id="scheduledDate"
+          autoComplete="off"
           type="date"
           className={inputClass}
           value={form.scheduledDate}

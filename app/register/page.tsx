@@ -33,7 +33,7 @@ export default async function RegisterPage({
         </div>
       </div>
 
-      <div className="flex items-center justify-center bg-gradient-to-b from-brand-50 to-white px-6 py-12 dark:from-stone-950 dark:to-stone-950">
+      <main className="flex items-center justify-center bg-gradient-to-b from-brand-50 to-white px-6 py-12 dark:from-stone-950 dark:to-stone-950">
         <div className="w-full max-w-sm">
           <Link
             href="/"
@@ -66,6 +66,7 @@ export default async function RegisterPage({
               </label>
               <input
                 id="name"
+                autoComplete="name"
                 name="name"
                 type="text"
                 required
@@ -83,6 +84,7 @@ export default async function RegisterPage({
               </label>
               <input
                 id="email"
+                autoComplete="email"
                 name="email"
                 type="email"
                 required
@@ -99,6 +101,7 @@ export default async function RegisterPage({
               </label>
               <input
                 id="password"
+                autoComplete="new-password"
                 name="password"
                 type="password"
                 required
@@ -126,7 +129,7 @@ export default async function RegisterPage({
             </Link>
           </p>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
