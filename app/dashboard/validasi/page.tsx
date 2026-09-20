@@ -25,7 +25,7 @@ export default async function ValidasiPage() {
         Validasi Rekomendasi Penyuluh
       </h1>
       <p className="mb-6 text-sm text-stone-500 dark:text-stone-400">
-        FR-16 — hanya dapat diakses peran Penyuluh (middleware.ts).
+        FR-16 hanya dapat diakses peran Penyuluh (middleware.ts).
       </p>
       <ValidationTableClient initialData={data} />
     </div>

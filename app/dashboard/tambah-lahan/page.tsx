@@ -11,7 +11,7 @@ export default function TambahLahanPage() {
         Pendaftaran Lahan &amp; Tambah Aktivitas
       </h1>
       <p className="mb-6 text-sm text-stone-500 dark:text-stone-400">
-        FR-05 / FR-14 — divalidasi Zod sebelum dikirim.
+        divalidasi Zod sebelum dikirim.
       </p>
       <FormEntryClient />
     </div>

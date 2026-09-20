@@ -1,11 +1,11 @@
-// app/page.tsx — Landing page (Server Component murni, 0 KB client JS)
+// app/page.tsx - Landing page (Server Component murni, 0 KB client JS)
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 
 export const metadata: Metadata = {
-  title: "ClimateSmart Farm — Rekomendasi Tani Berbasis AI",
+  title: "ClimateSmart Farm: Rekomendasi Tani Berbasis AI",
   description:
     "Platform rekomendasi jadwal tani berbasis cuaca real-time, sensor IoT, dan AI, dengan alur validasi Penyuluh untuk petani Indonesia.",
 };
@@ -23,7 +23,7 @@ const features = [
   },
   {
     title: "Validasi oleh Penyuluh",
-    desc: "Setiap rekomendasi AI ditinjau oleh Penyuluh Pertanian resmi sebelum dijalankan di lapangan — bukan sekadar model tanpa pengawasan.",
+    desc: "Setiap rekomendasi AI ditinjau oleh Penyuluh Pertanian resmi sebelum dijalankan di lapangan, bukan sekadar model tanpa pengawasan.",
     icon: "✅",
   },
   {
@@ -80,8 +80,8 @@ export default function LandingPage() {
               Tanam lebih tepat waktu, panen lebih optimal.
             </h1>
             <p className="mt-5 max-w-md text-base text-stone-600 dark:text-stone-300">
-              ClimateSmart Farm memadukan data cuaca, sensor IoT, dan rekomendasi AI — divalidasi
-              langsung oleh Penyuluh Pertanian — supaya keputusan di lahan Anda selalu berbasis
+              ClimateSmart Farm memadukan data cuaca, sensor IoT, dan rekomendasi AI divalidasi
+              langsung oleh Penyuluh Pertanian supaya keputusan di lahan Anda selalu berbasis
               data.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -191,7 +191,7 @@ export default function LandingPage() {
       </main>
 
       <footer className="border-t border-white/40 py-8 text-center text-xs text-stone-500 dark:border-white/10 dark:text-stone-400">
-        © 2026 ClimateSmart Farm — D3 Teknik Informatika SV UNS Kab. Madiun
+        © 2026 ClimateSmart Farm - D3 Teknik Informatika SV UNS Kab. Madiun
       </footer>
     </div>
   );

@@ -1,10 +1,10 @@
-// app/register/page.tsx — Server Component; form murni pakai Server Action
+// app/register/page.tsx - Server Component; form murni pakai Server Action
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { registerAction } from "@/lib/actions";
 
-export const metadata: Metadata = { title: "Daftar — ClimateSmart Farm" };
+export const metadata: Metadata = { title: "Daftar ClimateSmart Farm" };
 
 export default async function RegisterPage({
   searchParams,
