@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+/* Varian dark: mengikuti tombol tema aplikasi (atribut data-theme pada <html>, diatur oleh
+   ThemeToggle), BUKAN pengaturan tema sistem operasi. Tanpa ini, Tailwind v4 memakai
+   prefers-color-scheme sehingga pengguna dengan OS mode gelap melihat tampilan campuran
+   (latar terang + teks gelap/terang tercampur) sementara tombol masih bertuliskan "Terang". */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 /* ClimateSmart Farm brand tokens — Bab b (Tailwind v4 Oxide, zero-runtime).
    Warna disarikan dari identitas visual Modul 1-7 sebelumnya (hijau lahan,
    amber panen, biru langit/cuaca) supaya konsisten lintas seluruh riwayat
@@ -16,6 +22,10 @@
   --color-brand-700: #1a5539;
   --color-brand-800: #15422e;
   --color-brand-900: #0f3122;
+  /* brand-950 dipakai di dark:from-brand-950 (landing), dark:bg-brand-950/40 (kotak akun demo)
+     dan overlay foto (from-brand-950/80). Tanpa token ini class tersebut TIDAK terbentuk dan
+     teks terang jatuh di atas latar terang -> kontras rendah (audit Accessibility Lighthouse). */
+  --color-brand-950: #0a2419;
 
   --color-amber-glow: #d98a34;
   --color-sky-glow: #3e7ea8;
