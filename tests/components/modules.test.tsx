@@ -223,7 +223,7 @@ describe("FormEntryClient", () => {
     const user = userEvent.setup();
     renderWithClient(<FormEntryClient />);
     await user.click(screen.getByRole("button", { name: "Simpan Data Lahan" }));
-    expect(screen.getAllByRole("alert").length).toBeGreaterThanOrEqual(3);
+    expect((await screen.findAllByRole("alert")).length).toBeGreaterThanOrEqual(3);
     expect(screen.getByLabelText("Nama Lahan").getAttribute("aria-invalid")).toBe("true");
     expect(fetchMock).not.toHaveBeenCalled();
   });

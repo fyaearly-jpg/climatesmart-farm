@@ -3,6 +3,7 @@
 
 import { type FormEvent, useState } from "react";
 import { useCreateRecommendationMutation } from "@/hooks/useRecommendationsQuery";
+import { yieldToMain } from "@/lib/perf";
 import { type PlotRegistrationInput, PlotRegistrationSchema } from "@/lib/schemas";
 import { Button } from "../ui/Button";
 
@@ -28,9 +29,12 @@ export function FormEntryClient() {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     createMutation.reset();
+    // Task chunking (Bab j, INP): lepas main thread dulu supaya browser sempat
+    // menggambar umpan balik klik sebelum validasi Zod + mutasi dijalankan.
+    await yieldToMain();
     const result = PlotRegistrationSchema.safeParse(form);
     if (!result.success) {
       const flattened = result.error.flatten().fieldErrors;

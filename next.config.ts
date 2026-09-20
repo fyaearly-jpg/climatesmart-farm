@@ -44,6 +44,8 @@ const nextConfig: NextConfig = {
     // domain foto asli (Pexels, lisensi bebas) didaftarkan di sini agar
     // Next.js bisa mengoptimasi (resize, format AVIF/WebP otomatis).
     remotePatterns: [{ protocol: "https", hostname: "images.pexels.com" }],
+    // Bab j: sajikan AVIF (paling ringan) dengan fallback WebP — bawaan Next hanya WebP.
+    formats: ["image/avif", "image/webp"],
   },
   // Header keamanan dasar setara semangat Modul 6 (server security) —
   // dijalankan di edge oleh Next.js, bukan middleware.ts, agar berlaku ke
