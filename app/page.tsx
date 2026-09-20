@@ -81,8 +81,7 @@ export default function LandingPage() {
             </h1>
             <p className="mt-5 max-w-md text-base text-stone-600 dark:text-stone-300">
               ClimateSmart Farm memadukan data cuaca, sensor IoT, dan rekomendasi AI divalidasi
-              langsung oleh Penyuluh Pertanian supaya keputusan di lahan Anda selalu berbasis
-              data.
+              langsung oleh Penyuluh Pertanian supaya keputusan di lahan Anda selalu berbasis data.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/register">
