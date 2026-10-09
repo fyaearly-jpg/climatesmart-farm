@@ -1,12 +1,14 @@
 // lib/api.ts
 //
-// API client terpusat untuk KONTRAK API v1.0.
-// - Base URL /api/v1 (di Next.js arahkan ke Flask lewat rewrites di next.config).
-// - Header Authorization: Bearer <access_token> otomatis.
-// - Saat menerima 401 TOKEN_KEDALUWARSA: refresh satu kali (single-flight), lalu ulangi request.
+// API client sisi BROWSER untuk KONTRAK API v1.0.
+// - Memanggil /api/v1 di origin yang sama. Route handler Next.js (app/api/v1/[...path]) yang
+//   menyematkan `Authorization: Bearer` dari cookie httpOnly dan me-refresh token yang kedaluwarsa.
+//   Karena itu file ini TIDAK menyimpan atau membaca token apa pun.
 // - Semua error diubah menjadi ApiError dari amplop { error: { code, message, details } }.
 // - Semua respons sukses divalidasi dengan skema Zod; data yang menyimpang dari kontrak
 //   ditolak dengan kode RESPON_TIDAK_VALID, bukan dibiarkan lolos ke UI.
+//
+// Login dan logout dilakukan lewat server action (lihat lib/backend.ts dan lib/auth-cookies.ts).
 
 import { z } from "zod";
 import {
@@ -20,14 +22,11 @@ import {
   KoreksiHasilSchema,
   type KoreksiInput,
   LahanSchema,
-  type LoginInput,
-  LoginResponseSchema,
   type MusimTanamInput,
   MusimTanamSchema,
   NotifikasiSchema,
   PrediksiSchema,
   pagedEnvelope,
-  RefreshResponseSchema,
   type SimulasiInput,
   SimulasiSchema,
   UserSchema,
@@ -35,45 +34,6 @@ import {
 
 export const API_BASE = "/api/v1";
 const HALAMAN_LOGIN = "/login";
-
-/* -------------------------------------------------------------------- */
-/* Penyimpanan token                                                    */
-/* -------------------------------------------------------------------- */
-
-const KUNCI = { access: "csf.access_token", refresh: "csf.refresh_token" } as const;
-
-function bacaStorage(key: string): string | null {
-  if (typeof window === "undefined") return null;
-  try {
-    return window.localStorage.getItem(key);
-  } catch {
-    return null;
-  }
-}
-
-function tulisStorage(key: string, value: string | null): void {
-  if (typeof window === "undefined") return;
-  try {
-    if (value === null) window.localStorage.removeItem(key);
-    else window.localStorage.setItem(key, value);
-  } catch {
-    // Penyimpanan dinonaktifkan (mode privat ketat): sesi hanya bertahan sampai halaman dimuat ulang.
-  }
-}
-
-export const tokenStore = {
-  getAccess: () => bacaStorage(KUNCI.access),
-  getRefresh: () => bacaStorage(KUNCI.refresh),
-  setAccess: (token: string) => tulisStorage(KUNCI.access, token),
-  setAll: (access: string, refresh: string) => {
-    tulisStorage(KUNCI.access, access);
-    tulisStorage(KUNCI.refresh, refresh);
-  },
-  clear: () => {
-    tulisStorage(KUNCI.access, null);
-    tulisStorage(KUNCI.refresh, null);
-  },
-};
 
 /* -------------------------------------------------------------------- */
 /* Error                                                                */
@@ -143,8 +103,6 @@ interface RequestOptions {
   method?: "GET" | "POST" | "PATCH" | "DELETE";
   body?: unknown;
   query?: Query;
-  /** false untuk endpoint publik (login, refresh). */
-  auth?: boolean;
   signal?: AbortSignal;
 }
 
@@ -157,15 +115,26 @@ function bangunUrl(path: string, query?: Query): string {
   return `${API_BASE}${path}${qs ? `?${qs}` : ""}`;
 }
 
-async function rawFetch(path: string, opts: RequestOptions): Promise<unknown> {
+/** Sesi habis: server sudah menghapus cookie token, jadi cukup arahkan ke halaman login. */
+function sesiBerakhir(): void {
+  if (typeof window !== "undefined" && window.location.pathname !== HALAMAN_LOGIN) {
+    window.location.assign(HALAMAN_LOGIN);
+  }
+}
+
+async function request<S extends z.ZodType>(
+  path: string,
+  schema: S,
+  opts: RequestOptions = {},
+): Promise<z.infer<S>> {
   const headers: Record<string, string> = { Accept: "application/json" };
   if (opts.body !== undefined) headers["Content-Type"] = "application/json";
-  if (opts.auth ?? true) {
-    const token = tokenStore.getAccess();
-    if (token) headers.Authorization = `Bearer ${token}`;
-  }
 
-  const init: RequestInit = { method: opts.method ?? "GET", headers };
+  const init: RequestInit = {
+    method: opts.method ?? "GET",
+    headers,
+    credentials: "same-origin",
+  };
   if (opts.body !== undefined) init.body = JSON.stringify(opts.body);
   if (opts.signal) init.signal = opts.signal;
 
@@ -182,65 +151,11 @@ async function rawFetch(path: string, opts: RequestOptions): Promise<unknown> {
   }
 
   const json: unknown = res.status === 204 ? null : await res.json().catch(() => null);
-  if (!res.ok) throw keApiError(res.status, json);
-  return json;
-}
 
-function sesiBerakhir(): void {
-  tokenStore.clear();
-  if (typeof window !== "undefined" && window.location.pathname !== HALAMAN_LOGIN) {
-    window.location.assign(HALAMAN_LOGIN);
-  }
-}
-
-/** Single-flight: banyak request yang kedaluwarsa bersamaan hanya memicu satu refresh. */
-let refreshBerjalan: Promise<void> | null = null;
-
-function refreshAccessToken(): Promise<void> {
-  refreshBerjalan ??= (async () => {
-    const refresh = tokenStore.getRefresh();
-    if (!refresh) {
-      throw new ApiError("TIDAK_TERAUTENTIKASI", "Sesi berakhir. Silakan masuk kembali.", 401);
-    }
-    const json = await rawFetch("/auth/refresh", {
-      method: "POST",
-      body: { refresh_token: refresh },
-      auth: false,
-    });
-    const parsed = dataEnvelope(RefreshResponseSchema).safeParse(json);
-    if (!parsed.success) {
-      throw new ApiError("RESPON_TIDAK_VALID", "Respons refresh token tidak sesuai kontrak.", 502);
-    }
-    tokenStore.setAccess(parsed.data.data.access_token);
-  })().finally(() => {
-    refreshBerjalan = null;
-  });
-  return refreshBerjalan;
-}
-
-async function request<S extends z.ZodType>(
-  path: string,
-  schema: S,
-  opts: RequestOptions = {},
-): Promise<z.infer<S>> {
-  const auth = opts.auth ?? true;
-  let json: unknown;
-
-  try {
-    json = await rawFetch(path, opts);
-  } catch (e) {
-    if (auth && isApiError(e) && e.code === "TOKEN_KEDALUWARSA") {
-      try {
-        await refreshAccessToken();
-      } catch (refreshError) {
-        sesiBerakhir();
-        throw refreshError;
-      }
-      json = await rawFetch(path, opts); // ulangi sekali dengan token baru
-    } else {
-      if (auth && isApiError(e) && e.code === "TIDAK_TERAUTENTIKASI") sesiBerakhir();
-      throw e;
-    }
+  if (!res.ok) {
+    const galat = keApiError(res.status, json);
+    if (galat.code === "TIDAK_TERAUTENTIKASI" || galat.code === "TOKEN_KEDALUWARSA") sesiBerakhir();
+    throw galat;
   }
 
   const parsed = schema.safeParse(json);
@@ -258,17 +173,7 @@ async function request<S extends z.ZodType>(
 
 export const api = {
   auth: {
-    async login(input: LoginInput) {
-      const { data } = await request("/auth/login", dataEnvelope(LoginResponseSchema), {
-        method: "POST",
-        body: input,
-        auth: false,
-      });
-      tokenStore.setAll(data.access_token, data.refresh_token);
-      return data.user;
-    },
     me: async () => (await request("/auth/me", dataEnvelope(UserSchema))).data,
-    logout: () => tokenStore.clear(),
   },
 
   lahan: {
