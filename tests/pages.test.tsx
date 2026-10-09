@@ -175,6 +175,9 @@ describe("dashboard/page (konten per peran)", () => {
   });
 });
 
+// Catatan: validasi/page sekarang Client Component (hooks + TanStack Query) sehingga tidak
+// bisa dirender lewat `renderToHtml(await Page())`. Pengujiannya ada di
+// tests/validasi-page.test.tsx.
 describe("halaman peran khusus", () => {
   it("admin/page menampilkan daftar pengguna demo dalam tabel", async () => {
     const { default: AdminPage } = await import("@/app/dashboard/admin/page");
@@ -184,14 +187,6 @@ describe("halaman peran khusus", () => {
     expect(html).toContain("penyuluh@demo.csf");
     expect(html).toContain("admin@demo.csf");
     expect(html).not.toContain("passwordHash");
-  });
-
-  it("validasi/page menampilkan rekomendasi yang menunggu validasi", async () => {
-    const { default: ValidasiPage } = await import("@/app/dashboard/validasi/page");
-    const html = await renderToHtml(<Providers>{await ValidasiPage()}</Providers>);
-    expect(html).toContain("Validasi Rekomendasi Penyuluh");
-    expect(html).toContain("Setujui");
-    expect(html).toContain("Tolak");
   });
 
   it("tambah-lahan/page menampilkan formulir pendaftaran lahan", async () => {
