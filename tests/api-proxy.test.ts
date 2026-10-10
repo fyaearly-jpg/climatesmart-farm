@@ -136,6 +136,7 @@ describe("proxy /api/v1: refresh token di server", () => {
     const set = res.headers.getSetCookie();
     expect(set.some((c) => c.startsWith("csf_at=;"))).toBe(true);
     expect(set.some((c) => c.startsWith("csf_rt=;"))).toBe(true);
+    expect(set.some((c) => c.startsWith("csf_session=;"))).toBe(true);
   });
 
   it("TOKEN_KEDALUWARSA tanpa cookie refresh -> sesi habis", async () => {

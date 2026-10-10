@@ -43,19 +43,19 @@ export default async function LoginPage({
           <form action={loginAction} className="mt-6 flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
               <label
-                htmlFor="email"
+                htmlFor="username"
                 className="text-sm font-medium text-stone-700 dark:text-stone-200"
               >
-                Email
+                Username
               </label>
               <input
-                id="email"
-                autoComplete="email"
-                name="email"
-                type="email"
+                id="username"
+                autoComplete="username"
+                name="username"
+                type="text"
                 required
                 className="h-11 rounded-xl border border-stone-300 bg-white px-4 text-sm shadow-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-200 dark:border-stone-700 dark:bg-stone-900 dark:text-white"
-                placeholder="nama@email.com"
+                placeholder="Username Anda"
               />
             </div>
             <div className="flex flex-col gap-1.5">
@@ -83,13 +83,6 @@ export default async function LoginPage({
               Masuk
             </button>
           </form>
-
-          <div className="mt-6 rounded-xl border border-brand-200 bg-brand-50 p-3 text-xs text-brand-800 dark:border-brand-800 dark:bg-brand-950/40 dark:text-brand-200">
-            <p className="font-semibold">Akun demo:</p>
-            <p>petani@demo.csf / petani123</p>
-            <p>penyuluh@demo.csf / penyuluh123</p>
-            <p>admin@demo.csf / admin1234</p>
-          </div>
 
           <p className="mt-6 text-center text-sm text-stone-500 dark:text-stone-400">
             Belum punya akun?{" "}

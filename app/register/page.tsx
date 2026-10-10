@@ -6,6 +6,56 @@ import { registerAction } from "@/lib/actions";
 
 export const metadata: Metadata = { title: "Daftar ClimateSmart Farm" };
 
+const kelasInput =
+  "h-11 rounded-xl border border-stone-300 bg-white px-4 text-sm shadow-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-200 dark:border-stone-700 dark:bg-stone-900 dark:text-white";
+
+interface FieldProps {
+  id: string;
+  label: string;
+  type?: string;
+  autoComplete?: string;
+  placeholder: string;
+  minLength?: number;
+  inputMode?: "text" | "decimal" | "tel" | "email";
+  hint?: string;
+}
+
+function Field({
+  id,
+  label,
+  type = "text",
+  autoComplete,
+  placeholder,
+  minLength,
+  inputMode,
+  hint,
+}: FieldProps) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label htmlFor={id} className="text-sm font-medium text-stone-700 dark:text-stone-200">
+        {label}
+      </label>
+      <input
+        id={id}
+        name={id}
+        type={type}
+        required
+        autoComplete={autoComplete}
+        minLength={minLength}
+        inputMode={inputMode}
+        aria-describedby={hint ? `${id}-hint` : undefined}
+        className={kelasInput}
+        placeholder={placeholder}
+      />
+      {hint && (
+        <p id={`${id}-hint`} className="text-xs text-stone-500 dark:text-stone-400">
+          {hint}
+        </p>
+      )}
+    </div>
+  );
+}
+
 export default async function RegisterPage({
   searchParams,
 }: {
@@ -57,59 +107,71 @@ export default async function RegisterPage({
           )}
 
           <form action={registerAction} className="mt-6 flex flex-col gap-4">
-            <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor="name"
-                className="text-sm font-medium text-stone-700 dark:text-stone-200"
-              >
-                Nama lengkap
-              </label>
-              <input
-                id="name"
-                autoComplete="name"
-                name="name"
-                type="text"
-                required
+            <Field
+              id="nama"
+              label="Nama lengkap"
+              autoComplete="name"
+              minLength={3}
+              placeholder="Nama Anda"
+            />
+            <Field
+              id="username"
+              label="Username"
+              autoComplete="username"
+              minLength={3}
+              placeholder="Contoh: pak_subur"
+            />
+            <Field
+              id="email"
+              label="Email"
+              type="email"
+              autoComplete="email"
+              inputMode="email"
+              placeholder="nama@email.com"
+            />
+            <Field
+              id="no_whatsapp"
+              label="Nomor WhatsApp"
+              type="tel"
+              autoComplete="tel"
+              inputMode="tel"
+              placeholder="081234567890"
+              hint="Dipakai untuk menerima peringatan hama dan penyakit."
+            />
+            <Field
+              id="password"
+              label="Kata sandi"
+              type="password"
+              autoComplete="new-password"
+              minLength={8}
+              placeholder="Minimal 8 karakter, ada angka"
+            />
+
+            <fieldset className="flex flex-col gap-4 rounded-xl border border-stone-200 p-4 dark:border-white/10">
+              <legend className="px-1 text-sm font-semibold text-brand-800 dark:text-brand-200">
+                Lahan pertama Anda
+              </legend>
+              <Field
+                id="nama_lahan"
+                label="Nama lahan"
                 minLength={3}
-                className="h-11 rounded-xl border border-stone-300 bg-white px-4 text-sm shadow-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-200 dark:border-stone-700 dark:bg-stone-900 dark:text-white"
-                placeholder="Nama Anda"
+                placeholder="Contoh: Sawah Utara"
               />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor="email"
-                className="text-sm font-medium text-stone-700 dark:text-stone-200"
-              >
-                Email
-              </label>
-              <input
-                id="email"
-                autoComplete="email"
-                name="email"
-                type="email"
-                required
-                className="h-11 rounded-xl border border-stone-300 bg-white px-4 text-sm shadow-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-200 dark:border-stone-700 dark:bg-stone-900 dark:text-white"
-                placeholder="nama@email.com"
+              <Field
+                id="lat"
+                label="Latitude"
+                inputMode="decimal"
+                placeholder="-7.6298"
+                hint="Di Google Maps: klik kanan pada lokasi lahan, lalu salin angka pertama."
               />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor="password"
-                className="text-sm font-medium text-stone-700 dark:text-stone-200"
-              >
-                Kata sandi
-              </label>
-              <input
-                id="password"
-                autoComplete="new-password"
-                name="password"
-                type="password"
-                required
-                minLength={8}
-                className="h-11 rounded-xl border border-stone-300 bg-white px-4 text-sm shadow-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-200 dark:border-stone-700 dark:bg-stone-900 dark:text-white"
-                placeholder="Minimal 8 karakter, ada angka"
+              <Field
+                id="lon"
+                label="Longitude"
+                inputMode="decimal"
+                placeholder="111.5239"
+                hint="Angka kedua dari koordinat yang sama."
               />
-            </div>
+            </fieldset>
 
             <button
               type="submit"

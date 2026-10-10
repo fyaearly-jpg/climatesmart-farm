@@ -161,8 +161,14 @@ const passwordSchema = z
   .regex(/[0-9]/, "Kata sandi harus mengandung minimal 1 angka");
 
 export const LokasiSchema = z.object({
-  lat: z.number().min(-90).max(90),
-  lon: z.number().min(-180).max(180),
+  lat: z
+    .number({ error: "Latitude wajib berupa angka, contoh -7.6298" })
+    .min(-90, "Latitude harus antara -90 dan 90")
+    .max(90, "Latitude harus antara -90 dan 90"),
+  lon: z
+    .number({ error: "Longitude wajib berupa angka, contoh 111.5239" })
+    .min(-180, "Longitude harus antara -180 dan 180")
+    .max(180, "Longitude harus antara -180 dan 180"),
 });
 export type Lokasi = z.infer<typeof LokasiSchema>;
 
@@ -182,6 +188,15 @@ export const RegisterPetaniInputSchema = RegisterPenyuluhInputSchema.extend({
   }),
 });
 export type RegisterPetaniInput = z.infer<typeof RegisterPetaniInputSchema>;
+
+/** Respons POST /auth/register. Tidak ada token: pengguna harus login setelah mendaftar. */
+export const RegisterResponseSchema = z.object({
+  id_user: z.number().int(),
+  role: RoleEnum,
+  status_akun: StatusAkunEnum,
+  id_lahan: z.number().int().optional(),
+});
+export type RegisterResponse = z.infer<typeof RegisterResponseSchema>;
 
 /* -------------------------------------------------------------------- */
 /* Lahan dan cuaca (KONTRAK bagian 4)                                   */

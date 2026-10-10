@@ -25,6 +25,7 @@ import {
   refreshAccessToken,
 } from "@/lib/backend";
 import { ApiErrorEnvelopeSchema } from "@/lib/schemas";
+import { SESSION_COOKIE } from "@/lib/session-core";
 
 export const dynamic = "force-dynamic";
 
@@ -55,6 +56,9 @@ const galat = (status: number, code: string, message: string) =>
 function sesiHabis(): NextResponse {
   const res = galat(401, "TIDAK_TERAUTENTIKASI", "Sesi berakhir. Silakan masuk kembali.");
   clearTokenCookies(res.cookies);
+  // Hapus juga sesi tampilan (csf_session). Kalau dibiarkan, proxy.ts masih menganggap pengguna
+  // login sementara tokennya sudah tidak ada, dan halaman dashboard akan terus gagal memuat data.
+  res.cookies.delete(SESSION_COOKIE);
   return res;
 }
 

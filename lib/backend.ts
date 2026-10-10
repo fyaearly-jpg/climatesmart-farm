@@ -3,6 +3,7 @@
 // Pemanggil backend Flask dari SISI SERVER (route handler dan server action). Jangan diimpor
 // dari Client Component: file ini membaca BACKEND_URL dan menangani token mentah.
 
+import type { z } from "zod";
 import {
   ApiErrorEnvelopeSchema,
   dataEnvelope,
@@ -10,6 +11,9 @@ import {
   type LoginResponse,
   LoginResponseSchema,
   RefreshResponseSchema,
+  type RegisterPetaniInput,
+  type RegisterResponse,
+  RegisterResponseSchema,
 } from "./schemas";
 
 /** Batas waktu menunggu backend. Fungsi server Vercel punya batas durasi sendiri. */
@@ -44,8 +48,11 @@ export interface GalatBackend {
   message: string;
 }
 
-/** Ubah kegagalan fetch (timeout, jaringan putus) menjadi galat yang seragam. */
+/** Ubah kegagalan fetch (timeout, jaringan putus, konfigurasi kosong) menjadi galat yang seragam. */
 export function galatBackend(e: unknown): GalatBackend {
+  if (e instanceof BackendConfigError) {
+    return { status: 500, code: "SERVER_ERROR", message: "Konfigurasi server belum lengkap." };
+  }
   if (e instanceof Error && e.name === "TimeoutError") {
     return {
       status: 504,
@@ -79,18 +86,25 @@ export async function refreshAccessToken(
   }
 }
 
-export type LoginHasil =
-  | { ok: true; data: LoginResponse }
+/* -------------------------------------------------------------------- */
+/* Endpoint publik (tanpa token): login dan register                    */
+/* -------------------------------------------------------------------- */
+
+export type HasilPanggilan<T> =
+  | { ok: true; data: T }
   | { ok: false; status: number; code: string; message: string; details: Record<string, unknown> };
 
-/** Dipakai server action login. Token TIDAK pernah dikirim ke browser; simpan lewat setTokenCookies. */
-export async function loginBackend(input: LoginInput): Promise<LoginHasil> {
+async function postPublik<S extends z.ZodType>(
+  path: string,
+  body: unknown,
+  schema: S,
+): Promise<HasilPanggilan<z.infer<S>>> {
   let res: Response;
   try {
-    res = await backendFetch("/auth/login", {
+    res = await backendFetch(path, {
       method: "POST",
       headers: JSON_HEADERS,
-      body: JSON.stringify(input),
+      body: JSON.stringify(body),
     });
   } catch (e) {
     return { ok: false, details: {}, ...galatBackend(e) };
@@ -113,15 +127,50 @@ export async function loginBackend(input: LoginInput): Promise<LoginHasil> {
     };
   }
 
-  const parsed = dataEnvelope(LoginResponseSchema).safeParse(json);
+  const parsed = dataEnvelope(schema).safeParse(json);
   if (!parsed.success) {
     return {
       ok: false,
       status: 502,
       code: "RESPON_TIDAK_VALID",
-      message: "Respons login tidak sesuai kontrak API.",
+      message: "Respons server tidak sesuai kontrak API.",
       details: {},
     };
   }
-  return { ok: true, data: parsed.data.data };
+  return { ok: true, data: (parsed.data as { data: z.infer<S> }).data };
+}
+
+export type LoginHasil = HasilPanggilan<LoginResponse>;
+
+/** Dipakai server action login. Token TIDAK pernah dikirim ke browser; simpan lewat setTokenCookies. */
+export function loginBackend(input: LoginInput): Promise<LoginHasil> {
+  return postPublik("/auth/login", input, LoginResponseSchema);
+}
+
+/** POST /auth/register (petani). Responsnya tidak berisi token, jadi lanjutkan dengan loginBackend. */
+export function registerBackend(
+  input: RegisterPetaniInput,
+): Promise<HasilPanggilan<RegisterResponse>> {
+  return postPublik("/auth/register", input, RegisterResponseSchema);
+}
+
+/** Pesan galat yang ramah untuk ditampilkan di form (bahasa Indonesia, tanpa detail teknis). */
+export function pesanGalatPengguna(g: {
+  code: string;
+  message: string;
+  details: Record<string, unknown>;
+}): string {
+  if (g.code === "VALIDASI_GAGAL") {
+    for (const v of Object.values(g.details)) {
+      const pesan = typeof v === "string" ? v : Array.isArray(v) ? v[0] : undefined;
+      if (typeof pesan === "string" && pesan.length > 0) return pesan;
+    }
+  }
+  if (g.code === "AKUN_TERKUNCI") {
+    const sisa = g.details.sisa_menit;
+    if (typeof sisa === "number" && !g.message.includes("menit")) {
+      return `${g.message} Coba lagi dalam ${sisa} menit.`;
+    }
+  }
+  return g.message;
 }
