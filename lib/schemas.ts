@@ -210,6 +210,17 @@ export const LahanSchema = z.object({
 });
 export type Lahan = z.infer<typeof LahanSchema>;
 
+/** Masukan POST /lahan dan PATCH /lahan/{id}. Komoditas dikunci padi, jadi tidak ada di formulir. */
+export const LahanInputSchema = z.object({
+  nama_lahan: z
+    .string()
+    .trim()
+    .min(3, "Nama lahan minimal 3 karakter")
+    .max(60, "Nama lahan maksimal 60 karakter"),
+  lokasi: LokasiSchema,
+});
+export type LahanInput = z.infer<typeof LahanInputSchema>;
+
 export const CuacaTerkiniSchema = z.object({
   suhu: z.number(),
   kelembapan_udara: z.number(),

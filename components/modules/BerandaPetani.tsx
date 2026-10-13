@@ -337,7 +337,7 @@ export function BerandaPetani() {
       <Panel title="Belum ada lahan">
         <p className="text-sm text-stone-700 dark:text-stone-300">
           Daftarkan lahan Anda terlebih dahulu untuk melihat cuaca, jadwal, dan prediksi.{" "}
-          <Link href="/dashboard/tambah-lahan" className="font-semibold underline">
+          <Link href="/dashboard/lahan" className="font-semibold underline">
             Daftarkan lahan
           </Link>
         </p>

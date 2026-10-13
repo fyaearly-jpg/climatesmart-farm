@@ -217,7 +217,7 @@ describe("Beranda Petani", () => {
     rute["/api/v1/lahan"] = () => json({ data: [] });
     renderHalaman();
     const tautan = await screen.findByRole("link", { name: "Daftarkan lahan" });
-    expect(tautan.getAttribute("href")).toBe("/dashboard/tambah-lahan");
+    expect(tautan.getAttribute("href")).toBe("/dashboard/lahan");
     expect(dipanggil("/api/v1/lahan/5/cuaca")).toBe(0);
   });
 

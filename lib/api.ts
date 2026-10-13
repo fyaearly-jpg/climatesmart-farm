@@ -21,6 +21,7 @@ import {
   JadwalItemSchema,
   KoreksiHasilSchema,
   type KoreksiInput,
+  type LahanInput,
   LahanSchema,
   type MusimTanamInput,
   MusimTanamSchema,
@@ -178,6 +179,19 @@ export const api = {
 
   lahan: {
     list: async () => (await request("/lahan", dataEnvelope(z.array(LahanSchema)))).data,
+    create: async (input: LahanInput) =>
+      (await request("/lahan", dataEnvelope(LahanSchema), { method: "POST", body: input })).data,
+    update: async (idLahan: number, input: Partial<LahanInput>) =>
+      (
+        await request(`/lahan/${idLahan}`, dataEnvelope(LahanSchema), {
+          method: "PATCH",
+          body: input,
+        })
+      ).data,
+    /** DELETE menjawab 204 tanpa isi (KONTRAK bagian 4). */
+    remove: async (idLahan: number): Promise<void> => {
+      await request(`/lahan/${idLahan}`, z.null(), { method: "DELETE" });
+    },
     cuaca: async (idLahan: number) =>
       (await request(`/lahan/${idLahan}/cuaca`, dataEnvelope(CuacaSchema))).data,
     prediksi: async (idLahan: number) =>

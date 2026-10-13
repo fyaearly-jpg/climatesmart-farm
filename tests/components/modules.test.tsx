@@ -38,13 +38,21 @@ afterEach(() => {
 
 describe("SidebarNav", () => {
   it.each([
-    ["petani", "Tambah Lahan"],
+    ["petani", "Lahan Saya"],
     ["penyuluh", "Validasi Rekomendasi"],
     ["admin", "Kelola Pengguna"],
   ] as const)("peran %s melihat menu %s (dan Dashboard)", (role, label) => {
     render(<SidebarNav role={role} />);
     expect(screen.getByRole("link", { name: /Dashboard/ })).toBeTruthy();
     expect(screen.getByRole("link", { name: new RegExp(label) })).toBeTruthy();
+  });
+
+  it("petani juga melihat menu Simulasi Tanam, Musim Tanam, dan Kotak Masuk", () => {
+    const petani = "petani" as const;
+    render(<SidebarNav role={petani} />);
+    for (const nama of [/Simulasi Tanam/, /Musim Tanam/, /Kotak Masuk/]) {
+      expect(screen.getByRole("link", { name: nama })).toBeTruthy();
+    }
   });
 
   it("peran tidak melihat menu milik peran lain", () => {

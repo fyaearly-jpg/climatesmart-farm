@@ -186,14 +186,8 @@ describe("halaman peran khusus", () => {
     expect(html).not.toContain("passwordHash");
   });
 
-  it("tambah-lahan/page menampilkan formulir pendaftaran lahan", async () => {
+  it("tambah-lahan/page dialihkan ke halaman Lahan saya", async () => {
     const { default: TambahLahan } = await import("@/app/dashboard/tambah-lahan/page");
-    const html = await renderToHtml(
-      <Providers>
-        <TambahLahan />
-      </Providers>,
-    );
-    expect(html).toContain("Pendaftaran Lahan");
-    expect(html).toContain("Simpan Data Lahan");
+    expect(() => TambahLahan()).toThrow("REDIRECT:/dashboard/lahan");
   });
 });
