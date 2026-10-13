@@ -63,7 +63,7 @@ export function GrowthTimeline({
 
   return (
     <section className={`min-w-0 ${className}`} aria-label="Fase pertumbuhan padi">
-      <p className="text-sm text-slate-800">
+      <p className="text-sm text-slate-800 dark:text-stone-200">
         <span className="font-semibold">Hari ke-{hst}</span> setelah tanam, fase{" "}
         <span className="font-semibold">{aktif?.nama.toLowerCase()}</span>
         {varietas && <> ({varietas})</>}
@@ -76,7 +76,7 @@ export function GrowthTimeline({
             <div
               key={f.kode}
               style={{ flexGrow: f.akhir - f.mulai, flexBasis: 0 }}
-              className={f.kode === fase ? "bg-emerald-600" : "bg-emerald-100"}
+              className={f.kode === fase ? "bg-emerald-600" : "bg-emerald-100 dark:bg-white/15"}
             />
           ))}
         </div>
@@ -84,10 +84,10 @@ export function GrowthTimeline({
           className="absolute -top-5 flex -translate-x-1/2 flex-col items-center"
           style={{ left: `${Math.min(Math.max(posisi, 4), 96)}%` }}
         >
-          <span className="rounded bg-slate-900 px-1.5 py-0.5 text-xs font-medium text-white">
+          <span className="rounded bg-slate-900 px-1.5 py-0.5 text-xs font-medium text-white dark:bg-white dark:text-slate-900">
             {hst} HST
           </span>
-          <span className="h-5 w-px bg-slate-900" />
+          <span className="h-5 w-px bg-slate-900 dark:bg-white" />
         </div>
       </div>
 
@@ -99,7 +99,7 @@ export function GrowthTimeline({
             className={`min-w-0 rounded-md border p-2 text-sm ${
               f.kode === fase
                 ? "border-emerald-600 bg-emerald-50 text-emerald-950"
-                : "border-slate-200 text-slate-600"
+                : "border-slate-200 text-slate-600 dark:border-white/15 dark:text-stone-400"
             }`}
           >
             <span className="block font-medium">

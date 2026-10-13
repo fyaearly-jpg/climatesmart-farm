@@ -33,3 +33,13 @@ export function formatSisaWaktu(menit: number): string {
   const sisa = total % 60;
   return jam > 0 ? `${jam} j ${sisa} m` : `${sisa} m`;
 }
+
+/** "2026-10-12" -> "Sen, 12 Okt". Dipakai untuk baris prakiraan harian. */
+export function formatTanggalPendek(tanggal: string): string {
+  return new Intl.DateTimeFormat("id-ID", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    timeZone: "UTC",
+  }).format(new Date(`${tanggal}T00:00:00Z`));
+}

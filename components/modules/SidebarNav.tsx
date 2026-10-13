@@ -15,6 +15,9 @@ import { useUIStore } from "@/store/useUIStore";
 const linksByRole: Record<Role, { href: string; label: string; icon: string }[]> = {
   petani: [
     { href: "/dashboard", label: "Dashboard", icon: "🏠" },
+    { href: "/dashboard/simulasi", label: "Simulasi Tanam", icon: "🧪" },
+    { href: "/dashboard/musim-tanam", label: "Musim Tanam", icon: "🌾" },
+    { href: "/dashboard/notifikasi", label: "Kotak Masuk", icon: "🔔" },
     { href: "/dashboard/tambah-lahan", label: "Tambah Lahan", icon: "➕" },
   ],
   penyuluh: [

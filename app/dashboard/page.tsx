@@ -3,9 +3,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import { RecommendationsPanel } from "@/components/panels/RecommendationsPanel";
-import { SensorPanel } from "@/components/panels/SensorPanel";
-import { WeatherPanel } from "@/components/panels/WeatherPanel";
+import { BerandaPetani } from "@/components/modules/BerandaPetani";
 import { Skeleton } from "@/components/ui/AsyncUI";
 import { getRecommendations } from "@/lib/data/recommendations";
 import { getUserStats } from "@/lib/data/users";
@@ -18,15 +16,6 @@ const deniedLabel: Record<string, string> = {
   penyuluh: "Penyuluh",
   admin: "Admin",
 };
-
-function Panel({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="rounded-2xl border border-stone-200 bg-white/80 p-6 shadow-sm backdrop-blur dark:border-white/10 dark:bg-white/5">
-      <h2 className="mb-4 font-semibold text-stone-800 dark:text-white">{title}</h2>
-      {children}
-    </div>
-  );
-}
 
 async function PenyuluhSummary() {
   const data = await getRecommendations();
@@ -107,27 +96,7 @@ export default async function DashboardPage({
         </p>
       </div>
 
-      {role === "petani" && (
-        <div className="grid gap-6 md:grid-cols-2">
-          <Panel title="Cuaca Real-Time">
-            <Suspense fallback={<Skeleton lines={4} />}>
-              <WeatherPanel />
-            </Suspense>
-          </Panel>
-          <Panel title="Sensor IoT Kelembapan Lahan">
-            <Suspense fallback={<Skeleton lines={3} />}>
-              <SensorPanel />
-            </Suspense>
-          </Panel>
-          <div className="md:col-span-2">
-            <Panel title="Rekomendasi Jadwal Aktivitas (AI Recommendation Engine)">
-              <Suspense fallback={<Skeleton lines={5} />}>
-                <RecommendationsPanel />
-              </Suspense>
-            </Panel>
-          </div>
-        </div>
-      )}
+      {role === "petani" && <BerandaPetani />}
 
       {role === "penyuluh" && (
         <Suspense fallback={<Skeleton lines={4} />}>

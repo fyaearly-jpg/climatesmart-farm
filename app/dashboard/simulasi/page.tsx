@@ -23,7 +23,7 @@ const PENILAIAN: Record<Penilaian, { judul: string; kelas: string }> = {
 };
 
 const kelasInput =
-  "mt-1 block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-emerald-700";
+  "mt-1 block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-emerald-700";
 
 export default function SimulasiPage() {
   const queryClient = useQueryClient();
@@ -93,8 +93,10 @@ export default function SimulasiPage() {
   return (
     <main className="mx-auto w-full max-w-3xl min-w-0 space-y-6 p-4">
       <header>
-        <h1 className="text-2xl font-semibold text-slate-900">Simulasi waktu tanam</h1>
-        <p className="mt-1 text-sm text-slate-700">
+        <h1 className="text-2xl font-semibold text-stone-900 dark:text-white">
+          Simulasi waktu tanam
+        </h1>
+        <p className="mt-1 text-sm text-stone-700 dark:text-stone-300">
           Lihat perkiraan risiko cuaca, hama, dan penyakit sebelum Anda menanam. Hasil simulasi
           tidak disimpan kecuali Anda memilih menyimpannya.
         </p>
@@ -215,9 +217,9 @@ export default function SimulasiPage() {
             </section>
 
             <section className="space-y-3">
-              <h2 className="text-base font-semibold text-slate-900">Penyakit</h2>
+              <h2 className="text-base font-semibold text-stone-900 dark:text-white">Penyakit</h2>
               {hasil.penyakit.length === 0 && (
-                <p className="text-sm text-slate-600">
+                <p className="text-sm text-stone-600 dark:text-stone-400">
                   Tidak ada potensi penyakit yang terdeteksi.
                 </p>
               )}
@@ -227,9 +229,11 @@ export default function SimulasiPage() {
             </section>
 
             <section className="space-y-3">
-              <h2 className="text-base font-semibold text-slate-900">Hama</h2>
+              <h2 className="text-base font-semibold text-stone-900 dark:text-white">Hama</h2>
               {hasil.hama.length === 0 && (
-                <p className="text-sm text-slate-600">Tidak ada potensi hama yang terdeteksi.</p>
+                <p className="text-sm text-stone-600 dark:text-stone-400">
+                  Tidak ada potensi hama yang terdeteksi.
+                </p>
               )}
               {hasil.hama.map((h) => (
                 <PredictionCard key={h.kode} item={h} />

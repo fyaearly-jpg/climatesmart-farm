@@ -6,7 +6,8 @@
 // dari klien) sebelum request mencapai halaman manapun di bawah /dashboard.
 // Empat tingkat proteksi: (1) belum login / sesi tidak valid -> /login,
 // (2) /dashboard/validasi khusus "penyuluh", (3) /dashboard/admin khusus
-// "admin", (4) /dashboard/tambah-lahan khusus "petani".
+// "admin", (4) halaman petani (tambah-lahan, simulasi, musim-tanam, notifikasi)
+// khusus "petani".
 // Endpoint /api/* dijaga terpisah lewat lib/api-auth.ts (respons 401/403 JSON).
 
 import type { NextRequest } from "next/server";
@@ -27,6 +28,9 @@ export function proxy(request: NextRequest) {
     { prefix: "/dashboard/validasi", role: "penyuluh" },
     { prefix: "/dashboard/admin", role: "admin" },
     { prefix: "/dashboard/tambah-lahan", role: "petani" },
+    { prefix: "/dashboard/simulasi", role: "petani" },
+    { prefix: "/dashboard/musim-tanam", role: "petani" },
+    { prefix: "/dashboard/notifikasi", role: "petani" },
   ];
   for (const rule of restricted) {
     if (pathname.startsWith(rule.prefix) && session.role !== rule.role) {

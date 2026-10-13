@@ -37,7 +37,7 @@ const LABEL_TINGKAT: Record<Tingkat, string> = {
 };
 
 const kelasInput =
-  "mt-1 block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-emerald-700";
+  "mt-1 block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-emerald-700";
 
 export default function ValidasiPage() {
   const [dipilih, setDipilih] = useState<AntreanValidasiItem | null>(null);
@@ -54,13 +54,13 @@ export default function ValidasiPage() {
   return (
     <main className="mx-auto w-full max-w-4xl min-w-0 space-y-4 p-4">
       <header>
-        <h1 className="text-2xl font-semibold text-slate-900">Antrean validasi</h1>
-        <p className="mt-1 text-sm text-slate-700">
+        <h1 className="text-2xl font-semibold text-stone-900 dark:text-white">Antrean validasi</h1>
+        <p className="mt-1 text-sm text-stone-700 dark:text-stone-300">
           Rekomendasi hama dan penyakit berisiko tinggi menunggu saran Anda. Jika lewat 24 jam,
           saran terkirim ke petani dengan label belum divalidasi.
         </p>
         {antrean.isSuccess && antrean.data.length > 0 && (
-          <p className="mt-2 text-sm font-medium text-slate-900">
+          <p className="mt-2 text-sm font-medium text-stone-900 dark:text-white">
             {antrean.data.length} menunggu
             {jumlahMendesak > 0 && `, ${jumlahMendesak} mendesak`}
           </p>
@@ -79,7 +79,7 @@ export default function ValidasiPage() {
       </div>
 
       {antrean.isPending && (
-        <p role="status" className="text-sm text-slate-600">
+        <p role="status" className="text-sm text-stone-600 dark:text-stone-400">
           Memuat antrean...
         </p>
       )}
@@ -167,7 +167,7 @@ function KoreksiDialog({ item, onTutup, onSelesai }: KoreksiDialogProps) {
       ref={ref}
       onClose={onTutup}
       aria-labelledby="koreksi-judul"
-      className="m-auto w-[min(32rem,calc(100vw-2rem))] rounded-lg p-0 backdrop:bg-slate-900/50"
+      className="m-auto w-[min(32rem,calc(100vw-2rem))] rounded-lg bg-white p-0 text-slate-900 backdrop:bg-slate-900/50"
     >
       {/* key: state formulir ikut di-reset setiap kali rekomendasi yang ditinjau berganti */}
       {item && (

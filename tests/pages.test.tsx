@@ -128,15 +128,12 @@ describe("dashboard/page (konten per peran)", () => {
     );
   }
 
-  it("petani: panel cuaca, sensor, dan rekomendasi", async () => {
+  it("petani: Beranda Petani dimuat (data diambil di sisi klien dari API)", async () => {
     as("petani", "Fya Petani");
     const html = await renderDashboard();
     expect(html).toContain("Halo, Fya");
-    expect(html).toContain("Cuaca Real-Time");
-    expect(html).toContain("Sensor IoT Kelembapan Lahan");
-    expect(html).toContain("Rekomendasi Jadwal Aktivitas");
-    expect(html).toContain("Kelembapan Udara");
-    expect(html).toContain("Kelembapan Tanah");
+    // Render server hanya memuat kerangka; cuaca, jadwal, dan prediksi datang dari API lewat TanStack Query.
+    expect(html).toContain("Memuat lahan");
     expect(html).not.toContain("Total Pengguna");
   });
 
@@ -145,7 +142,7 @@ describe("dashboard/page (konten per peran)", () => {
     const html = await renderDashboard();
     expect(html).toContain("Rekomendasi menunggu validasi Anda");
     expect(html).toContain("Buka Halaman Validasi");
-    expect(html).not.toContain("Cuaca Real-Time");
+    expect(html).not.toContain("Memuat lahan");
   });
 
   it("admin: ringkasan statistik pengguna", async () => {
@@ -153,7 +150,7 @@ describe("dashboard/page (konten per peran)", () => {
     const html = await renderDashboard();
     expect(html).toContain("Total Pengguna");
     expect(html).toContain("Kelola Pengguna");
-    expect(html).not.toContain("Cuaca Real-Time");
+    expect(html).not.toContain("Memuat lahan");
   });
 
   it.each([
@@ -170,7 +167,7 @@ describe("dashboard/page (konten per peran)", () => {
   it("tanpa sesi tetap tidak menampilkan panel peran apa pun", async () => {
     as(null);
     const html = await renderDashboard();
-    expect(html).not.toContain("Cuaca Real-Time");
+    expect(html).not.toContain("Memuat lahan");
     expect(html).not.toContain("Total Pengguna");
   });
 });
