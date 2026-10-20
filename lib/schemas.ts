@@ -151,7 +151,7 @@ export const RefreshResponseSchema = z.object({
 export const UserSchema = UserRingkasSchema.extend({
   username: z.string(),
   email: z.string(),
-  no_whatsapp: z.string(),
+  no_whatsapp: z.string().nullable().optional(),
 });
 export type User = z.infer<typeof UserSchema>;
 
